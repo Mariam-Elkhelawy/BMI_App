@@ -1,4 +1,4 @@
-import 'package:bmi_app/home_screen.dart';
+import 'package:bmi_app/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -11,36 +11,41 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
-
-      // initialRoute: MyHomePage.routeName,
-      // routes: {
-      //   MyHomePage.routeName: (context) => MyHomePage(),
-      //   ResultScreen.routeName: (context) => ResultScreen()
-      // },
       theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.blueGrey,
-          centerTitle: true,
-          iconTheme: IconThemeData(color: Colors.white),
-          titleTextStyle: TextStyle(
-              color: Colors.white, fontSize: 24, fontWeight: FontWeight.w500),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Color(0xFFe0ddaa),
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
-        textTheme: TextTheme(
+        primaryColor: const Color(0xFF203239),
+        scaffoldBackgroundColor: const Color(0xFF98A7A7),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF203239),
+          centerTitle: true,
+          iconTheme: IconThemeData(
+            color: Color(0xFFe0ddaa),
+          ),
+          titleTextStyle: TextStyle(
+              color: Color(0xFFe0ddaa),
+              fontSize: 24,
+              fontWeight: FontWeight.w500),
+        ),
+        iconTheme: const IconThemeData(
+          color: Color(0xFFe0ddaa),
+        ),
+        textTheme: const TextTheme(
           bodyLarge: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.w800,
-            color: Colors.white,
+            color: Color(0xFFe0ddaa),
           ),
           bodyMedium: TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Color(0xFFe0ddaa),
           ),
           bodySmall: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Color(0xFFe0ddaa),
           ),
         ),
       ),

@@ -1,22 +1,18 @@
 import 'dart:math';
 
-import 'package:bmi_app/models/user_model.dart';
-import 'package:bmi_app/screens/home/widgets/gender_widget.dart';
-
 import '../result/result_screen.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-  static const String routeName = 'ResultScreen';
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _MyHomePageState extends State<MyHomePage> {
+  bool isMale = true;
   double heightVal = 170;
-
   int weight = 55;
   int age = 18;
 
@@ -33,9 +29,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.all(20.0),
                 child: Row(
                   children: [
-                    GenderWidget( gender: 'male'),
+                    gender(context, 'male'),
                     const SizedBox(width: 15),
-                    GenderWidget(gender: 'female'),
+                    gender(context, 'female'),
                   ],
                 ),
               ),
@@ -46,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.blueGrey,
+                    color: Theme.of(context).primaryColor,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -59,16 +55,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         textBaseline: TextBaseline.alphabetic,
                         children: [
                           Text(heightVal.toStringAsFixed(1),
-                              style: Theme.of(context).textTheme.bodyMedium),
+                              style: Theme.of(context).textTheme.bodyLarge),
+                          const SizedBox(width: 4),
                           Text('CM',
-                              style: Theme.of(context).textTheme.bodyMedium),
+                              style: Theme.of(context).textTheme.bodySmall),
                         ],
                       ),
                       Slider(
+                        inactiveColor: const Color(0xFFe0ddaa),
+                        activeColor: const Color(0xFF98A7A7),
                         min: 90,
                         max: 220,
                         value: heightVal,
-                        onChanged: (newValue) => setState(() => heightVal = newValue),
+                        onChanged: (newValue) =>
+                            setState(() => heightVal = newValue),
                       ),
                     ],
                   ),
@@ -88,15 +88,18 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Container(
-              color: Colors.teal,
+              color: Theme.of(context).primaryColor,
               width: double.infinity,
-              height: MediaQuery.of(context).size.height / 16,
               child: TextButton(
                 onPressed: () {
-                  double result = weight / pow(heightVal / 100, 2);
-                  UserModel model =UserModel(gender: "female", age: age, result: result);
-                  // Navigator.pushNamed(context, ResultScreen.routeName,arguments:model );
-
+                  var result = weight / pow(heightVal / 100, 2);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ResultScreen(
+                          result: result, isMale: isMale, age: age),
+                    ),
+                  );
                 },
                 child: Text(
                   'Calculate',
@@ -110,25 +113,58 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Expanded gender(BuildContext context, String gender) {
+    return Expanded(
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            isMale = (gender == 'male') ? true : false;
+          });
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color:
+                (isMale && gender == 'male') || (!isMale && gender == 'female')
+                    ? const Color(0xFF4a585b)
+                    : Theme.of(context).primaryColor,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(gender == 'male' ? Icons.male : Icons.female, size: 90),
+              const SizedBox(height: 15),
+              Text(
+                gender == 'male' ? 'Male' : 'Female',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Expanded m2Expanded(BuildContext context, String type) {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Colors.blueGrey,
+          color: Theme.of(context).primaryColor,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               type == 'age' ? 'Age' : 'Weight',
-              style: Theme.of(context).textTheme.headline2,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 6),
             Text(
               type == 'age' ? '$age' : '$weight',
-              style: Theme.of(context).textTheme.headline1,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -136,16 +172,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   heroTag: type == 'age' ? 'age--' : 'weight--',
                   onPressed: () =>
                       setState(() => type == 'age' ? age-- : weight--),
-                  child: const Icon(Icons.remove),
                   mini: true,
+                  child: const Icon(
+                    Icons.remove,
+                    color: Color(0xFF203239),
+                  ),
                 ),
                 const SizedBox(width: 8),
                 FloatingActionButton(
                   heroTag: type == 'age' ? 'age++' : 'weight++',
                   onPressed: () =>
                       setState(() => type == 'age' ? age++ : weight++),
-                  child: const Icon(Icons.add),
                   mini: true,
+                  child: const Icon(
+                    Icons.add,
+                    color: Color(0xFF203239),
+                  ),
                 ),
               ],
             ),
